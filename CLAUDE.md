@@ -1,21 +1,49 @@
 # aweirdmaan.github.io
 
-Amaan Shaikh's personal portfolio site. Static, hosted on GitHub Pages (served from `main`).
-Built during the 2020 lockdown to showcase blogs and edited photographs.
-
-## Structure
-- `index.html` — home / bio landing page
-- `blog.html`, `blog1.html` — blog listing + a post
-- `gallery.html` — photo gallery
-- `resume/resume.html` — resume (own `resume.css`)
-- `app.js` — hamburger nav toggle (`navSlide`)
-- `css/styles.css` — site styles
-- `css/gallery/`, `css/blog-images/` — image assets; icons in `css/*-NNNN/`
+Amaan Shaikh's personal portfolio — an **Astro + React** static site (modern rebuild of the
+original lockdown-era Bootstrap site). Three pages: Home, Blog, Gallery.
 
 ## Stack
-Bootstrap 4.5, jQuery 3.5, Font Awesome — all via CDN. No build step, no package manager.
-Edit HTML/CSS/JS directly and commit; GitHub Pages publishes from `main`.
+- **Astro 5** (static output) + **React 19** islands for interactivity
+- Self-hosted **Josefin Sans** via `@fontsource` (no external font/CDN requests)
+- No Bootstrap, no jQuery. Plain CSS with design tokens in `src/styles/global.css`.
+- Deployed on **Cloudflare Pages** (build `npm run build`, output `dist/`).
 
-## Notes
-- Google Analytics tag is `UA-174218862-1` (Universal Analytics, sunset by Google in 2023 — replace with GA4 if analytics are wanted).
-- To preview locally: `python3 -m http.server` then open http://localhost:8000
+## Commands
+- `npm run dev` — local dev server (http://localhost:4321)
+- `npm run build` — static build to `dist/`
+- `npm run preview` — serve the built `dist/`
+
+## Structure
+```
+src/
+  layouts/BaseLayout.astro   — <head>, SEO meta, fonts, Nav + Footer, <slot>
+  components/
+    Nav.tsx        — React island (client:load): mobile hamburger + active link
+    Lightbox.tsx   — React island (client:visible): masonry gallery + enlarge overlay
+    Footer.astro   — social links (inline SVG icons)
+    BlogCard.astro — one blog post card
+  data/
+    posts.ts       — blog entries (currently 1, the Medium crypto post)
+    gallery.ts     — gallery image lists (landscape / portrait)
+  pages/
+    index.astro        — home / bio
+    blog/index.astro   — blog list
+    gallery.astro      — photo gallery
+  styles/global.css    — design tokens + all styling
+public/
+  favicon.ico
+  images/gallery/*     — gallery photos
+```
+
+## Conventions
+- React components use `className` (`.tsx`); Astro components use `class` (`.astro`).
+- Add a React island only when something needs client interactivity; everything else stays
+  static `.astro`. Hydrate with the narrowest directive (`client:visible` > `client:load`).
+- Blog posts: add to `src/data/posts.ts`. `href` can be external (opens new tab) or internal.
+  Graduate to an Astro content collection of Markdown if/when posts are written on-site.
+
+## Notes / TODO
+- Home bio still says "pursued my B.Tech …" copy from 2021 — refresh when ready (see TODO in `index.astro`).
+- Analytics: enable **Cloudflare Web Analytics** in the CF Pages dashboard (no code; the old
+  Google Universal Analytics tag was dead and has been removed).

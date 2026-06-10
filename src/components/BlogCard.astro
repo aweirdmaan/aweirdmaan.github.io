@@ -1,0 +1,26 @@
+---
+import type { Post } from '../data/posts';
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const external = post.href.startsWith('http');
+---
+
+<a
+  class="card"
+  href={post.href}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener' : undefined}
+>
+  <img class="card__img" src={post.image} alt={post.title} loading="lazy" />
+  <div class="card__body">
+    <h2 class="card__title">
+      {post.title}
+      {external && <span class="ext">&#8599;</span>}
+    </h2>
+    <p class="card__excerpt">{post.excerpt}</p>
+    <p class="card__date">{post.date}</p>
+  </div>
+</a>
