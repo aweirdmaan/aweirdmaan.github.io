@@ -1,19 +1,23 @@
-import type { GalleryItem } from '../components/Lightbox';
+// Photos are generated from Cloudinary at build time → src/data/gallery.json
+// (see scripts/fetch-gallery.mjs). That file is gitignored; regenerate with `npm run gallery`.
+import photosData from './gallery.json';
 
-// Deduped from the original gallery (img-night / img-college-ground were repeated).
-export const landscape: GalleryItem[] = [
-  { src: '/images/gallery/img-idol.jpg', alt: 'Idol' },
-  { src: '/images/gallery/img-hostel-ground.jpeg', alt: 'Hostel ground' },
-  { src: '/images/gallery/img-cycle.jpg', alt: 'Cycle' },
-  { src: '/images/gallery/img-math-dept.jpeg', alt: 'Mathematics department' },
-  { src: '/images/gallery/img-ground-hostel.jpeg', alt: 'Ground near hostel' },
-  { src: '/images/gallery/img-mess.jpg', alt: 'Mess' },
-  { src: '/images/gallery/img-flower-pink-landscape.jpeg', alt: 'Pink flower' },
-];
+export interface SrcSetEntry {
+  src: string;
+  width: number;
+  height: number;
+}
 
-export const portrait: GalleryItem[] = [
-  { src: '/images/gallery/img-night.jpg', alt: 'Night' },
-  { src: '/images/gallery/img-flower-pink-portrait.jpg', alt: 'Pink flower' },
-  { src: '/images/gallery/img-college-ground.jpg', alt: 'College ground' },
-  { src: '/images/gallery/img-flower-red.jpg', alt: 'Red flower' },
-];
+export interface Photo {
+  /** Display URL (~1280w, optimized). */
+  src: string;
+  /** High-resolution URL for the lightbox. */
+  large: string;
+  /** Original dimensions — drive the justified layout's aspect ratios. */
+  width: number;
+  height: number;
+  alt: string;
+  srcSet: SrcSetEntry[];
+}
+
+export const photos: Photo[] = photosData as Photo[];

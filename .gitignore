@@ -17,3 +17,4 @@ pnpm-debug.log*
 
 # macOS
 .DS_Store
+src/data/gallery.json

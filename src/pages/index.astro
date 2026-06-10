@@ -1,31 +1,80 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogCard from '../components/BlogCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import avatar from '../assets/amaan.png';
+import { projects } from '../data/projects';
+import { posts } from '../data/posts';
+import { photos } from '../data/gallery';
+
+const latestPost = posts[0];
+// A small preview for the home page; full set lives on /gallery.
+const featuredPhotos = [photos[0], photos[1], photos[2], photos[3]];
 ---
 
-<BaseLayout title="Amaan Shaikh — Home">
+<BaseLayout title="Amaan Shaikh — Solution Consultant, Photographer">
+  <!-- Hero -->
   <section class="hero">
-    <h1>Hey, I'm <span class="accent">Amaan Shaikh</span></h1>
-    <p class="hero__tag">Computer Science · Photography · Writing</p>
+    <div class="hero__text">
+      <h1>Hey, I'm <span class="accent">Amaan Shaikh</span></h1>
+      <p class="hero__tag">Solution Consultant · Photographer · Occasional writer</p>
+      <p class="hero__intro">
+        I build software for a living at <strong>Sahaj</strong>, take photos on my phone
+        whenever something catches my eye, and write when something's worth sharing.
+      </p>
+    </div>
+    <Image class="hero__avatar" src={avatar} alt="Amaan Shaikh" width={320} height={320} />
   </section>
 
-  <div class="prose">
-    {/* TODO: "pursuing my B.Tech" is from 2021 — update this bio when you have a moment. */}
-    <p>
-      I'm from Dharmabad, a town in Nanded, Maharashtra. I pursued my B.Tech in Computer
-      Science and Engineering at Walchand College of Engineering, Sangli.
-    </p>
-    <p>
-      Welcome to my website. I first built it during the lockdown to showcase my blogs and
-      photographs — and it's been rebuilt since, but the spirit is the same.
-    </p>
-    <p>
-      You'll find my thoughts and some of my edited photographs here. Have a look around the
-      Blog and Gallery sections.
-    </p>
-    <p>
-      Feel free to share suggestions. Connect with me on any platform that suits you best —
-      the links are at the bottom of the page.
-    </p>
-    <p class="signoff">Thank you.</p>
-  </div>
+  <!-- About -->
+  <section class="home-section">
+    <div class="prose">
+      <p>
+        I'm from Dharmabad, a town in Nanded, Maharashtra, and studied Computer Science and
+        Engineering at Walchand College of Engineering, Sangli. I first built this site during
+        the lockdown to share my blogs and photographs — it's been rebuilt since, but the
+        spirit is the same.
+      </p>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="home-section">
+    <div class="home-section__head">
+      <h2 class="section-title">Things I've <span>built</span></h2>
+      <a class="home-section__more" href="https://github.com/aweirdmaan" target="_blank" rel="noopener">
+        All on GitHub &#8599;
+      </a>
+    </div>
+    <div class="project-grid">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+
+  <!-- Latest writing -->
+  <section class="home-section">
+    <div class="home-section__head">
+      <h2 class="section-title">Latest <span>writing</span></h2>
+      <a class="home-section__more" href="/blog">All posts &#8594;</a>
+    </div>
+    <div class="blog-list">
+      <BlogCard post={latestPost} />
+    </div>
+  </section>
+
+  <!-- Photography preview -->
+  <section class="home-section">
+    <div class="home-section__head">
+      <h2 class="section-title">Through the <span>lens</span></h2>
+      <a class="home-section__more" href="/gallery">Full gallery &#8594;</a>
+    </div>
+    <a class="photo-strip" href="/gallery" aria-label="Open the gallery">
+      {
+        featuredPhotos.map((photo) => (
+          <img src={photo.src} alt={photo.alt} loading="lazy" />
+        ))
+      }
+    </a>
+  </section>
 </BaseLayout>

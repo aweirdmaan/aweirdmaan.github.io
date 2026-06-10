@@ -4,7 +4,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "gallery": "node --env-file-if-exists=.env scripts/fetch-gallery.mjs",
+    "predev": "node --env-file-if-exists=.env scripts/fetch-gallery.mjs",
     "dev": "astro dev",
+    "prebuild": "node --env-file-if-exists=.env scripts/fetch-gallery.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -13,8 +16,10 @@
     "@astrojs/react": "^4.2.0",
     "@fontsource/josefin-sans": "^5.1.0",
     "astro": "^5.2.0",
+    "cloudinary": "^2.10.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-photo-album": "^3.6.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

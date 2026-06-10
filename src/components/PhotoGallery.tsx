@@ -1,25 +1,23 @@
 import { useEffect, useState } from 'react';
-
-export interface GalleryItem {
-  src: string;
-  alt: string;
-}
+import { RowsPhotoAlbum } from 'react-photo-album';
+import 'react-photo-album/rows.css';
+import type { Photo } from '../data/gallery';
 
 interface Props {
-  items: GalleryItem[];
+  photos: Photo[];
 }
 
 /**
- * Renders the masonry gallery and an overlay lightbox. Clicking a figure opens
- * the enlarged image; Escape, clicking the backdrop, or the arrows navigate/close.
+ * Justified "tiles" gallery (react-photo-album rows layout) with a click-to-enlarge
+ * lightbox. One combined gallery — no portrait/landscape distinction.
  */
-export default function Lightbox({ items }: Props) {
+export default function PhotoGallery({ photos }: Props) {
   const [index, setIndex] = useState<number | null>(null);
   const isOpen = index !== null;
 
   const close = () => setIndex(null);
-  const prev = () => setIndex((i) => (i === null ? i : (i - 1 + items.length) % items.length));
-  const next = () => setIndex((i) => (i === null ? i : (i + 1) % items.length));
+  const prev = () => setIndex((i) => (i === null ? i : (i - 1 + photos.length) % photos.length));
+  const next = () => setIndex((i) => (i === null ? i : (i + 1) % photos.length));
 
   useEffect(() => {
     if (!isOpen) return;
@@ -38,13 +36,13 @@ export default function Lightbox({ items }: Props) {
 
   return (
     <>
-      <div className="masonry">
-        {items.map((item, i) => (
-          <figure key={item.src} onClick={() => setIndex(i)}>
-            <img src={item.src} alt={item.alt} loading="lazy" />
-          </figure>
-        ))}
-      </div>
+      <RowsPhotoAlbum
+        photos={photos}
+        targetRowHeight={240}
+        spacing={10}
+        sizes={{ size: '940px', sizes: [{ viewport: '(max-width: 940px)', size: '100vw' }] }}
+        onClick={({ index: i }) => setIndex(i)}
+      />
 
       {isOpen && (
         <div className="lb" role="dialog" aria-modal="true" onClick={close}>
@@ -63,8 +61,8 @@ export default function Lightbox({ items }: Props) {
           </button>
           <img
             className="lb__img"
-            src={items[index].src}
-            alt={items[index].alt}
+            src={photos[index].large}
+            alt={photos[index].alt}
             onClick={(e) => e.stopPropagation()}
           />
           <button
