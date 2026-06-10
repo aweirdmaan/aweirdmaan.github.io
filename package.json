@@ -9,10 +9,13 @@
     "dev": "astro dev",
     "prebuild": "node --env-file-if-exists=.env scripts/fetch-gallery.mjs",
     "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "preview": "npm run build && wrangler dev",
+    "astro": "astro",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "12",
     "@astrojs/react": "^4.2.0",
     "@fontsource/josefin-sans": "^5.1.0",
     "astro": "^5.2.0",
@@ -23,6 +26,7 @@
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0"
+    "@types/react-dom": "^19.0.0",
+    "wrangler": "^4.99.0"
   }
 }
