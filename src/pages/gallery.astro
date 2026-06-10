@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Lightbox from '../components/Lightbox.tsx';
+import { landscape, portrait } from '../data/gallery';
+---
+
+<BaseLayout title="Gallery — Amaan Shaikh" description="Photography by Amaan Shaikh.">
+  <h1 class="section-title">The <span>Gallery</span></h1>
+  <p class="section-sub">A few edited frames. Click any photo to enlarge.</p>
+
+  <section class="gallery-group">
+    <h2 class="section-title" style="font-size:1.4rem">Landscape</h2>
+    {/* Gallery + lightbox need click interactivity → hydrate when scrolled into view. */}
+    <Lightbox client:visible items={landscape} />
+  </section>
+
+  <section class="gallery-group">
+    <h2 class="section-title" style="font-size:1.4rem">Portrait</h2>
+    <Lightbox client:visible items={portrait} />
+  </section>
+</BaseLayout>

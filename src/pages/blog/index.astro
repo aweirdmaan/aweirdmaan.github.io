@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { posts } from '../../data/posts';
+---
+
+<BaseLayout title="Blog — Amaan Shaikh" description="Writing by Amaan Shaikh.">
+  <h1 class="section-title">The <span>Blog</span></h1>
+  <p class="section-sub">Thoughts and write-ups.</p>
+
+  <div class="blog-list">
+    {posts.map((post) => <BlogCard post={post} />)}
+  </div>
+</BaseLayout>
