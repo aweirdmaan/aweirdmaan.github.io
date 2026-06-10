@@ -17,18 +17,16 @@ original lockdown-era Bootstrap site). Three pages: Home, Blog, Gallery.
 
 ## Deploy
 Live at **https://aweirdmaan.pages.dev** (Cloudflare Pages, project `aweirdmaan`).
-**Currently deployed by manual direct upload** via the local wrangler session (the project is
-direct-upload type — `Git Provider: No` — so pushes do NOT auto-deploy yet):
+**Push-to-deploy is live** via Cloudflare's Git integration: every push to `main` triggers a
+Cloudflare build (`npm run build`, output `dist/`) and deploy. No GitHub Actions, no tokens
+stored anywhere. Build logs: Cloudflare dash → Workers & Pages → aweirdmaan → Deployments.
 
-```
-npm run build
-npx wrangler pages deploy dist --project-name aweirdmaan --branch main --commit-dirty=true
-```
+Build env vars (`CLOUDINARY_URL` secret, `PUBLIC_CLOUDINARY_CLOUD_NAME`) are set in the
+Cloudflare Pages project settings so the prebuild `fetch-gallery.mjs` runs during CI.
 
-To get real push-to-deploy you must recreate the project as **Git-connected** in the Cloudflare
-dashboard (direct-upload projects can't be converted): delete the current project, then
-Pages → Connect to Git → repo `aweirdmaan/aweirdmaan`, build `npm run build`, output `dist`,
-and add env vars `CLOUDINARY_URL` (secret) + `PUBLIC_CLOUDINARY_CLOUD_NAME`.
+Note: the Git connection was created via the Cloudflare API (the dashboard's "Connect to Git"
+funnels to a Worker on `*.workers.dev`; the API path creates a proper Pages project on
+`*.pages.dev`). It auto-deploys with no stored credential.
 
 ## Photos
 Served from Cloudinary (folder `gallery/`). **Add photos = upload to that folder in Cloudinary,
