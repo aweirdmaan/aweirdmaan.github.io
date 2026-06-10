@@ -1,4 +1,4 @@
-# aweirdmaan.github.io
+# aweirdmaan
 
 Amaan Shaikh's personal portfolio — an **Astro + React** static site (modern rebuild of the
 original lockdown-era Bootstrap site). Three pages: Home, Blog, Gallery.
