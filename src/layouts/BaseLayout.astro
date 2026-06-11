@@ -9,11 +9,45 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  /** Override the social-share image (absolute URL). Defaults to the branded OG card. */
+  image?: string;
 }
 
-const { title, description = "Amaan Shaikh's personal portfolio — blog and photography." } =
-  Astro.props;
+const {
+  title,
+  description = "Amaan Shaikh — Solution Consultant at Sahaj, phone photographer, and occasional writer. Projects, blog, and gallery.",
+  image = 'https://res.cloudinary.com/dys9t7kn1/image/upload/f_jpg,w_1200/profile/og.png',
+} = Astro.props;
+
 const pathname = Astro.url.pathname;
+// Canonical + absolute URLs (Astro.site is set in astro.config).
+const canonical = new URL(pathname, Astro.site).href;
+
+// Person + WebSite structured data — helps search engines understand who this is.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      name: 'Amaan Shaikh',
+      url: Astro.site?.href,
+      image,
+      jobTitle: 'Solution Consultant',
+      worksFor: { '@type': 'Organization', name: 'Sahaj' },
+      sameAs: [
+        'https://github.com/aweirdmaan',
+        'https://www.linkedin.com/in/amaan-shaikh-973009194/',
+        'https://twitter.com/a_weird_maan',
+        'https://www.instagram.com/mori.r.t_/',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      name: 'Amaan Shaikh',
+      url: Astro.site?.href,
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -26,12 +60,31 @@ const pathname = Astro.url.pathname;
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph (Facebook, LinkedIn, WhatsApp, Slack…) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Amaan Shaikh" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="twitter:creator" content="@a_weird_maan" />
+
     <meta name="generator" content={Astro.generator} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <!-- Mobile nav toggle needs interactivity → hydrate this React island on load. -->
