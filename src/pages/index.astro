@@ -1,9 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogCard from '../components/BlogCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import avatar from '../assets/amaan.png';
 import { projects } from '../data/projects';
 import { posts } from '../data/posts';
 import { photos } from '../data/gallery';
@@ -11,6 +9,12 @@ import { photos } from '../data/gallery';
 const latestPost = posts[0];
 // A small preview for the home page; full set lives on /gallery.
 const featuredPhotos = [photos[0], photos[1], photos[2], photos[3]];
+
+// Avatar served from Cloudinary (profile/ folder, kept out of the gallery list).
+// c_fill,g_face = face-centered square crop; f_auto/q_auto = optimized delivery.
+const cloud = 'https://res.cloudinary.com/dys9t7kn1/image/upload';
+const avatar = `${cloud}/c_fill,g_face,f_auto,q_auto:best,w_400,h_400/profile/avatar.jpg`;
+const avatar2x = `${cloud}/c_fill,g_face,f_auto,q_auto:best,w_800,h_800/profile/avatar.jpg`;
 ---
 
 <BaseLayout title="Amaan Shaikh — Solution Consultant, Photographer">
@@ -24,7 +28,15 @@ const featuredPhotos = [photos[0], photos[1], photos[2], photos[3]];
         whenever something catches my eye, and write when something's worth sharing.
       </p>
     </div>
-    <Image class="hero__avatar" src={avatar} alt="Amaan Shaikh" width={320} height={320} />
+    <img
+      class="hero__avatar"
+      src={avatar}
+      srcset={`${avatar} 1x, ${avatar2x} 2x`}
+      alt="Amaan Shaikh"
+      width="180"
+      height="180"
+      loading="eager"
+    />
   </section>
 
   <!-- About -->
