@@ -19,6 +19,20 @@
   --font: 'Josefin Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
+/* Dark theme — toggled via [data-theme="dark"] on <html>. Accent stays the same. */
+:root[data-theme='dark'] {
+  --bg: #161618;
+  --surface: #1f1f22;
+  --nav-bg: #161618;
+  --ink: #c6c4c0;
+  --ink-strong: #f4f2ee;
+  --muted: #8a8782;
+  --accent-soft: rgba(242, 163, 101, 0.18);
+  --border: #2d2d31;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lift: 0 2px 6px rgba(0, 0, 0, 0.35), 0 18px 44px rgba(0, 0, 0, 0.55);
+}
+
 *,
 *::before,
 *::after {
@@ -44,6 +58,7 @@ body {
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 main {
@@ -138,6 +153,35 @@ h3 {
 .nav__links a:hover::after,
 .nav__links a[aria-current='page']::after {
   width: 100%;
+}
+
+.nav__right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.nav__theme {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: #c8c6c2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav__theme:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.nav__theme svg {
+  width: 19px;
+  height: 19px;
 }
 
 .nav__burger {
@@ -356,22 +400,16 @@ h3 {
   gap: 0.75rem;
 }
 
-.photo-strip img {
-  width: 100%;
+.photo-strip .blurup {
   aspect-ratio: 1;
-  object-fit: cover;
   border-radius: 12px;
   box-shadow: var(--shadow);
-  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.photo-strip:hover img {
-  opacity: 0.92;
-}
-
-.photo-strip img:hover {
+.photo-strip .blurup:hover {
   transform: translateY(-3px);
-  opacity: 1;
+  box-shadow: var(--shadow-lift);
 }
 
 @media (max-width: 600px) {
@@ -494,6 +532,71 @@ h3 {
 .react-photo-album--photo:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-lift);
+}
+
+/* ===== Contact form ===== */
+.contact {
+  max-width: 560px;
+}
+
+.contact__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.contact input,
+.contact textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--ink-strong);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact textarea {
+  margin-bottom: 1rem;
+  resize: vertical;
+}
+
+.contact input:focus,
+.contact textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.contact input::placeholder,
+.contact textarea::placeholder {
+  color: var(--muted);
+}
+
+.contact__hp {
+  position: absolute;
+  left: -9999px;
+}
+
+.contact__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.contact__status {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 520px) {
+  .contact__row {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ===== Footer ===== */
@@ -647,4 +750,63 @@ h3 {
     height: 40px;
     font-size: 1.5rem;
   }
+}
+
+/* ===== Reusable button ===== */
+.btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #1d1d1d;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.7rem 1.4rem;
+  border-radius: 10px;
+  border: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: var(--shadow-lift);
+}
+
+/* ===== 404 ===== */
+.notfound {
+  text-align: center;
+  padding: 4rem 1rem 2rem;
+}
+
+.notfound h1 {
+  font-size: clamp(5rem, 18vw, 9rem);
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.notfound__msg {
+  color: var(--muted);
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* ===== Blur-up image loading ===== */
+.blurup {
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.blurup img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.blurup img.is-loaded {
+  opacity: 1;
 }

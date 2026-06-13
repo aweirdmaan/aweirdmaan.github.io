@@ -13,6 +13,8 @@ export interface Photo {
   src: string;
   /** High-resolution URL for the lightbox. */
   large: string;
+  /** Tiny blurred placeholder for blur-up loading. */
+  lqip: string;
   /** Original dimensions — drive the justified layout's aspect ratios. */
   width: number;
   height: number;

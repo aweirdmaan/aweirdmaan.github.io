@@ -42,6 +42,28 @@ export default function PhotoGallery({ photos }: Props) {
         spacing={10}
         sizes={{ size: '940px', sizes: [{ viewport: '(max-width: 940px)', size: '100vw' }] }}
         onClick={({ index: i }) => setIndex(i)}
+        render={{
+          // Blur-up: show the tiny LQIP as a blurred backdrop; fade the real image in on load.
+          image: (props, { photo }) => (
+            <div
+              className="blurup"
+              style={{
+                backgroundImage: `url(${(photo as Photo).lqip})`,
+                width: '100%',
+                height: '100%',
+              }}
+            >
+              <img
+                {...props}
+                ref={(el) => {
+                  // Cached images may finish before onLoad attaches — reveal immediately.
+                  if (el?.complete) el.classList.add('is-loaded');
+                }}
+                onLoad={(e) => e.currentTarget.classList.add('is-loaded')}
+              />
+            </div>
+          ),
+        }}
       />
 
       {isOpen && (

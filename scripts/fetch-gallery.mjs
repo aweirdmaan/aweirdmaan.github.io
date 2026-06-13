@@ -41,6 +41,8 @@ const photos = resources
       order: Number(ctx.order ?? 999),
       src: url(r.public_id, r.format, 1280),
       large: `${base}/f_auto,q_auto:best,c_limit,w_2400/${r.public_id}.${r.format}`,
+      // Tiny, heavily-blurred placeholder shown while the full image loads (blur-up).
+      lqip: `${base}/e_blur:1200,q_30,f_auto,w_40/${r.public_id}.${r.format}`,
       width: r.width,
       height: r.height,
       alt: ctx.alt ?? r.public_id.split('/').pop(),

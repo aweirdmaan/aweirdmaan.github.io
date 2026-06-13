@@ -3,6 +3,7 @@ import '@fontsource/josefin-sans/400.css';
 import '@fontsource/josefin-sans/500.css';
 import '@fontsource/josefin-sans/700.css';
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 import Nav from '../components/Nav.tsx';
 import Footer from '../components/Footer.astro';
 
@@ -56,6 +57,31 @@ const jsonLd = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="google-site-verification" content="nX0dDVce8Jn-6sj32FRMCQRM6ThKBKCwglpyoKMeqqE" />
+
+    <!-- Set theme before first paint (no flash). Re-applies after view-transition swaps. -->
+    <script is:inline>
+      (() => {
+        const apply = () => {
+          const saved = localStorage.getItem('theme');
+          const theme =
+            saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.dataset.theme = theme;
+        };
+        apply();
+        document.addEventListener('astro:after-swap', apply);
+      })();
+    </script>
+
+    <!-- Blur-up: fade in server-rendered .blurup images once loaded (runs each page load). -->
+    <script is:inline>
+      document.addEventListener('astro:page-load', () => {
+        document.querySelectorAll('.blurup img:not(.is-loaded)').forEach((img) => {
+          if (img.complete) img.classList.add('is-loaded');
+          else img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
+        });
+      });
+    </script>
+    <ClientRouter />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
