@@ -14,9 +14,6 @@ const featuredPhotos = [photos[0], photos[1], photos[2], photos[3]];
 const squareThumb = (src: string) =>
   src.replace(/\/upload\/[^/]+\//, '/upload/c_fill,g_auto,f_auto,q_auto,w_500,h_500/');
 
-// Web3Forms access key (public by design). If unset, the contact section shows an email button.
-const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
-
 // Avatar served from Cloudinary (profile/ folder, kept out of the gallery list).
 // c_fill,g_face = face-centered square crop; f_auto/q_auto = optimized delivery.
 const cloud = 'https://res.cloudinary.com/dys9t7kn1/image/upload';
@@ -98,61 +95,4 @@ const avatar2x = `${cloud}/c_fill,g_face,f_auto,q_auto:best,w_800,h_800/profile/
       }
     </a>
   </section>
-
-  <!-- Contact -->
-  <section class="home-section" id="contact">
-    <h2 class="section-title">Get in <span>touch</span></h2>
-    <p class="section-sub">Have an idea, a question, or just want to say hi? Drop me a line.</p>
-
-    {
-      web3formsKey ? (
-        <form class="contact" id="contact-form">
-          <input type="hidden" name="access_key" value={web3formsKey} />
-          <input type="hidden" name="subject" value="New message from aweirdmaan.pages.dev" />
-          {/* Honeypot — bots fill this; humans never see it. */}
-          <input type="checkbox" name="botcheck" class="contact__hp" tabindex="-1" autocomplete="off" />
-          <div class="contact__row">
-            <input type="text" name="name" placeholder="Your name" required />
-            <input type="email" name="email" placeholder="Your email" required />
-          </div>
-          <textarea name="message" rows="4" placeholder="Your message" required />
-          <div class="contact__actions">
-            <button type="submit" class="btn">Send message</button>
-            <p class="contact__status" aria-live="polite" />
-          </div>
-        </form>
-      ) : (
-        <a class="btn" href="mailto:amaanshaikh@gmail.com?subject=Hello%20Amaan">Email me</a>
-      )
-    }
-  </section>
-
-  {
-    web3formsKey && (
-      <script is:inline>
-        {`
-        document.addEventListener('astro:page-load', () => {
-          const form = document.getElementById('contact-form');
-          if (!form || form.dataset.bound) return;
-          form.dataset.bound = '1';
-          const status = form.querySelector('.contact__status');
-          form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            status.textContent = 'Sending…';
-            try {
-              const res = await fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                body: JSON.stringify(Object.fromEntries(new FormData(form))),
-              });
-              const data = await res.json();
-              if (data.success) { form.reset(); status.textContent = "✓ Thanks — I'll get back to you soon."; }
-              else { status.textContent = 'Hmm, that failed. Try emailing me instead.'; }
-            } catch { status.textContent = 'Network error. Try emailing me instead.'; }
-          });
-        });
-        `}
-      </script>
-    )
-  }
 </BaseLayout>
